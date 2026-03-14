@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Instagram Reel Downloader</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f4f4;
+text-align:center;
+margin-top:120px;
+}
+
+.container{
+background:white;
+width:90%;
+max-width:400px;
+margin:auto;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+input{
+width:100%;
+padding:12px;
+font-size:16px;
+margin-bottom:15px;
+}
+
+button{
+padding:12px 20px;
+background:#e1306c;
+border:none;
+color:white;
+font-size:16px;
+cursor:pointer;
+border-radius:5px;
+}
+
+video{
+margin-top:20px;
+width:100%;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Instagram Reel Downloader</h2>
+
+<input id="url" placeholder="Paste Instagram Reel Link">
+
+<button onclick="download()">Download</button>
+
+<p id="status"></p>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+async function download(){
+
+let url=document.getElementById("url").value;
+
+if(!url){
+alert("Paste reel link");
+return;
+}
+
+document.getElementById("status").innerText="Downloading...";
+
+let res=await fetch("/.netlify/functions/download",{
+method:"POST",
+body:JSON.stringify({url:url})
+});
+
+let data=await res.json();
+
+document.getElementById("status").innerText="";
+
+document.getElementById("result").innerHTML=`
+
+<video controls>
+<source src="${data.video}" type="video/mp4">
+</video>
+
+<br><br>
+
+<a href="${data.video}" download>
+<button>Download MP4</button>
+</a>
+
+`;
+
+}
+
+</script>
+
+</body>
+</html>
